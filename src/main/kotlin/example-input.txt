@@ -1,0 +1,12 @@
+KNOWLEDGE BASE
+P,Q->R
+S->T
+T->P
+S->V
+V->Q
+
+FACTS
+S
+
+GOAL
+R

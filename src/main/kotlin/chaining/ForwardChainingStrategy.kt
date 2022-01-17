@@ -1,3 +1,7 @@
+package chaining
+
+import common.KnowledgeBaseGraph
+import Symbol
 import java.util.*
 
 class ForwardChainingStrategy(
@@ -5,7 +9,7 @@ class ForwardChainingStrategy(
     private val facts: Set<Symbol>,
 ) {
 
-    fun reach(goal: Symbol): Boolean {
+    fun canReach(goal: Symbol): Boolean {
         val solveCount = graph.inDegree.toMutableMap()
         val inferred = HashMap<Symbol, Boolean>()
         val queue = LinkedList(facts)

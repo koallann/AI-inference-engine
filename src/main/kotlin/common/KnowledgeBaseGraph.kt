@@ -1,3 +1,7 @@
+package common
+
+import Symbol
+
 class KnowledgeBaseGraph {
 
     private val _vertices: HashMap<Symbol, MutableSet<Symbol>> = hashMapOf()

@@ -1,9 +1,14 @@
+package chaining
+
+import common.KnowledgeBaseGraph
+import Symbol
+
 class BackwardChainingStrategy(
     private val graph: KnowledgeBaseGraph,
     private val facts: Set<Symbol>,
 ) {
 
-    fun reach(goal: Symbol): Boolean {
+    fun canReach(goal: Symbol): Boolean {
         val visited = HashMap<Symbol, Boolean>()
         val resolved = HashMap<Symbol, Boolean>().also { map ->
             facts.forEach { fact -> map[fact] = true }
