@@ -6,11 +6,12 @@ class KnowledgeBaseGraph {
     private val _inDegree: HashMap<Symbol, Int> = hashMapOf()
     val inDegree: Map<Symbol, Int> = _inDegree
 
-    fun addEdge(from: Symbol, to: Symbol) {
-        initVertexIfNeeded(from)
-        initVertexIfNeeded(to)
-        _vertices[from]!!.add(to)
-        _inDegree[to] = _inDegree[to]!! + 1
+    fun addEdge(premise: Symbol, conclusion: Symbol) {
+        initVertexIfNeeded(premise)
+        initVertexIfNeeded(conclusion)
+
+        _vertices[premise]!!.add(conclusion)
+        _inDegree[conclusion] = _inDegree[conclusion]!! + 1
     }
 
     private fun initVertexIfNeeded(symbol: Symbol) {
