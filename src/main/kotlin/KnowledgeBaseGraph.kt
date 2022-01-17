@@ -1,4 +1,4 @@
-class Graph {
+class KnowledgeBaseGraph {
 
     private val _vertices: HashMap<Symbol, MutableSet<Symbol>> = hashMapOf()
     val vertices: Map<Symbol, Set<Symbol>> = _vertices

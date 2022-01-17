@@ -1,5 +1,5 @@
 class BackwardChainingStrategy(
-    private val graph: Graph,
+    private val graph: KnowledgeBaseGraph,
     private val facts: Set<Symbol>,
 ) {
 
