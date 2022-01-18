@@ -1,12 +1,15 @@
 KNOWLEDGE BASE
-P,Q->R
-S->T
-T->P
-S->V
-V->Q
+F,H->K
+E,A->K
+E,B->H
+A,G->B
+B,D->H
+G,D->E
+A,B->D
+A,C->G
 
 FACTS
-S
+A,C,F
 
 GOAL
-R
+K

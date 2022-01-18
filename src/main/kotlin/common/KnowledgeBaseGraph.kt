@@ -14,6 +14,8 @@ class KnowledgeBaseGraph {
         initVertexIfNeeded(premise)
         initVertexIfNeeded(conclusion)
 
+        if (_vertices[premise]!!.contains(conclusion)) return
+
         _vertices[premise]!!.add(conclusion)
         _inDegree[conclusion] = _inDegree[conclusion]!! + 1
     }
