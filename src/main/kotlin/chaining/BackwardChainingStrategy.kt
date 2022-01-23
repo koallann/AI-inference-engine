@@ -1,7 +1,7 @@
 package chaining
 
-import common.KnowledgeBaseGraph
 import Symbol
+import common.KnowledgeBaseGraph
 
 class BackwardChainingStrategy(
     private val graph: KnowledgeBaseGraph,
@@ -18,28 +18,30 @@ class BackwardChainingStrategy(
 
     private fun backward(
         goal: Symbol,
-        visited: HashMap<Symbol, Boolean>,
-        resolved: HashMap<Symbol, Boolean>,
+        visited: MutableMap<Symbol, Boolean>,
+        resolved: MutableMap<Symbol, Boolean>,
     ): Boolean {
         if (resolved[goal] == true) return true
 
         if (visited[goal] == true) return false
         visited[goal] = true
 
-        var goalResolved = false
+        val premises = mutableSetOf<Symbol>()
+        graph.vertices.forEach { (v, adj) -> if (goal in adj) premises.add(v) }
+        if (premises.isEmpty()) return false
 
-        for ((vertex, adj) in graph.vertices) {
-            if (goal !in adj) continue
+        val premisesResolved = mutableMapOf<Symbol, Boolean>()
+        premises.forEach { premisesResolved[it] = backward(it, visited, resolved) }
 
-            goalResolved = true
-
-            if (!backward(vertex, visited, resolved)) {
-                goalResolved = false
-                break
+        graph.conjunctions[goal]?.forEach { conjunction ->
+            val allPremisesResolved = conjunction.all { premise -> premisesResolved[premise] == true }
+            if (allPremisesResolved) {
+                resolved[goal] = true
+                return true
             }
         }
 
-        return goalResolved.also { resolved[goal] = it }
+        return false
     }
 
 }

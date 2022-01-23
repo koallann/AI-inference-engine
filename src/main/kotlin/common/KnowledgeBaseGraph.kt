@@ -10,14 +10,22 @@ class KnowledgeBaseGraph {
     private val _inDegree: HashMap<Symbol, Int> = hashMapOf()
     val inDegree: Map<Symbol, Int> = _inDegree
 
-    fun addEdge(premise: Symbol, conclusion: Symbol) {
-        initVertexIfNeeded(premise)
+    private val _conjunctions: MutableMap<Symbol, MutableList<Set<Symbol>>> = hashMapOf()
+    val conjunctions: Map<Symbol, List<Set<Symbol>>> = _conjunctions
+
+    fun addEdges(premises: Set<Symbol>, conclusion: Symbol) {
+        premises.forEach { initVertexIfNeeded(it) }
         initVertexIfNeeded(conclusion)
 
-        if (_vertices[premise]!!.contains(conclusion)) return
+        premises.forEach {
+            if (_vertices[it]!!.contains(conclusion)) return@forEach
 
-        _vertices[premise]!!.add(conclusion)
-        _inDegree[conclusion] = _inDegree[conclusion]!! + 1
+            _vertices[it]!!.add(conclusion)
+            _inDegree[conclusion] = _inDegree[conclusion]!! + 1
+        }
+
+        initConjunctionsIfNeeded(conclusion)
+        _conjunctions[conclusion]!!.add(premises)
     }
 
     private fun initVertexIfNeeded(symbol: Symbol) {
@@ -26,6 +34,12 @@ class KnowledgeBaseGraph {
         }
         if (_inDegree[symbol] == null) {
             _inDegree[symbol] = 0
+        }
+    }
+
+    private fun initConjunctionsIfNeeded(symbol: Symbol) {
+        if (_conjunctions[symbol] == null) {
+            _conjunctions[symbol] = arrayListOf()
         }
     }
 

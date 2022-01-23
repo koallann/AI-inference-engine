@@ -66,7 +66,7 @@ class Main {
                     val premises = split[0].split(",")
                     val conclusion = split[1]
 
-                    premises.forEach { graph.addEdge(it, conclusion) }
+                    graph.addEdges(premises.toSet(), conclusion)
                 }
             } while (line != null && line.isNotBlank())
 
