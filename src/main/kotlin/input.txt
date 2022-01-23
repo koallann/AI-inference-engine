@@ -6,8 +6,5 @@ I->R
 V->S
 V->Q
 
-FACTS
-I,V
-
 GOAL
 O

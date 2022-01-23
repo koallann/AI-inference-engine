@@ -1,5 +1,4 @@
-import chaining.BackwardChainingStrategy
-import chaining.ForwardChainingStrategy
+import chaining.HybridChainingStrategy
 import common.KnowledgeBaseGraph
 import java.io.BufferedReader
 import java.io.File
@@ -9,7 +8,6 @@ class Main {
     companion object {
 
         private val PATTERN_KB_LINE = Regex("^(\\w+,)*\\w+->\\w+$")
-        private val PATTERN_FACTS_LINE = Regex("^(\\w+,)*\\w+$")
         private val PATTERN_GOAL_LINE = Regex("^\\w+$")
 
         @JvmStatic
@@ -26,13 +24,11 @@ class Main {
             }
 
             var graph: KnowledgeBaseGraph? = null
-            var facts: Set<Symbol>? = null
             var goal: Symbol? = null
 
             input.bufferedReader().use {
                 try {
                     graph = readKnowledgeBase(it)
-                    facts = readFacts(it)
                     goal = readGoal(it)
                 } catch (e: Exception) {
                     println(e.localizedMessage)
@@ -40,15 +36,12 @@ class Main {
                 }
             }
 
-            runChaining(graph!!, facts!!, goal!!)
+            runChaining(graph!!, goal!!)
         }
 
-        private fun runChaining(graph: KnowledgeBaseGraph, facts: Set<Symbol>, goal: Symbol) {
-            val forward = ForwardChainingStrategy(graph, facts)
-            val backward = BackwardChainingStrategy(graph, facts)
-
-            println("Forward Chaining: ${forward.canReach(goal)}")
-            println("Backward Chaining: ${backward.canReach(goal)}")
+        private fun runChaining(graph: KnowledgeBaseGraph, goal: Symbol) {
+            val chaining = HybridChainingStrategy(graph)
+            println("Reachable: ${chaining.canReach(goal)}")
         }
 
         private fun readKnowledgeBase(input: BufferedReader): KnowledgeBaseGraph {
@@ -71,22 +64,6 @@ class Main {
             } while (line != null && line.isNotBlank())
 
             return graph
-        }
-
-        private fun readFacts(input: BufferedReader): Set<Symbol> {
-            if (input.readLine() != "FACTS")
-                throw IllegalStateException("Invalid file, exiting...")
-
-            val facts = hashSetOf<Symbol>()
-            val line = input.readLine()
-
-            return if (line?.matches(PATTERN_FACTS_LINE) == true) {
-                facts += line.split(",")
-                input.readLine()
-                facts
-            } else {
-                throw IllegalStateException("Invalid file, exiting...")
-            }
         }
 
         private fun readGoal(input: BufferedReader): Symbol {

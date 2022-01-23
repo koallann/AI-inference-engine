@@ -5,14 +5,13 @@ import common.KnowledgeBaseGraph
 
 class BackwardChainingStrategy(
     private val graph: KnowledgeBaseGraph,
-    private val facts: Set<Symbol>,
+    private val requestSymbol: (BackwardChainingStrategy, Symbol) -> Boolean
 ) {
 
-    fun canReach(goal: Symbol): Boolean {
-        val visited = HashSet<Symbol>(facts)
-        val resolved = HashSet<Symbol>(facts)
-        return backward(goal, visited, resolved)
-    }
+    val resolved: MutableSet<Symbol> = HashSet()
+
+    fun canReach(goal: Symbol): Boolean =
+        backward(goal, HashSet(), resolved)
 
     private fun backward(
         goal: Symbol,
@@ -25,7 +24,11 @@ class BackwardChainingStrategy(
         visited += goal
 
         val premises = graph.vertices.filter { goal in it.value }.keys
-        if (premises.isEmpty()) return false
+        if (premises.isEmpty()) {
+            val response = requestSymbol(this, goal)
+            if (response) resolved += goal
+            return response
+        }
 
         val premisesResolved = premises.filter { backward(it, visited, resolved) }
 
