@@ -10,9 +10,7 @@ class ForwardChainingStrategy(
 ) {
 
     fun canReach(goal: Symbol): Boolean {
-        val resolved = mutableSetOf<Symbol>()
-        facts.forEach { resolved += it }
-
+        val resolved = HashSet(facts)
         val queue = LinkedList(facts)
 
         while (!queue.isEmpty()) {
