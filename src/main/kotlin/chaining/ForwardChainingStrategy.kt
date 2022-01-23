@@ -1,7 +1,7 @@
 package chaining
 
-import common.KnowledgeBaseGraph
 import Symbol
+import common.KnowledgeBaseGraph
 import java.util.*
 
 class ForwardChainingStrategy(
@@ -10,23 +10,21 @@ class ForwardChainingStrategy(
 ) {
 
     fun canReach(goal: Symbol): Boolean {
-        val solveCount = graph.inDegree.toMutableMap()
-        val inferred = HashMap<Symbol, Boolean>()
+        val resolved = mutableSetOf<Symbol>()
+        facts.forEach { resolved += it }
+
         val queue = LinkedList(facts)
 
         while (!queue.isEmpty()) {
             val p = queue.pop()
             if (p == goal) return true
 
-            if (inferred[p] == true) continue
-            inferred[p] = true
-
-            for ((vertex, adj) in graph.vertices) {
-                if (p != vertex) continue
-
-                adj.forEach { conclusion ->
-                    solveCount[conclusion] = solveCount[conclusion]!! - 1
-                    if (solveCount[conclusion] == 0) queue.push(conclusion)
+            graph.vertices[p]?.forEach { consequent ->
+                graph.conjunctions[consequent]?.forEach { conjunction ->
+                    if (resolved.containsAll(conjunction)) {
+                        resolved += consequent
+                        queue.push(consequent)
+                    }
                 }
             }
         }
