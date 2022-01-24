@@ -2,17 +2,15 @@ package chaining
 
 import Symbol
 import common.KnowledgeBaseGraph
-import java.util.*
 
-class HybridChainingStrategy(private val graph: KnowledgeBaseGraph) {
-
-    private val scanner = Scanner(System.`in`)
+class HybridChainingStrategy(
+    private val graph: KnowledgeBaseGraph,
+    private val onRequestSymbol: (Symbol) -> Boolean
+) {
 
     fun canReach(goal: Symbol): Boolean {
         val backward = BackwardChainingStrategy(graph) { backward, symbol ->
-            println("=> $symbol ? Type yes/no")
-            val response = scanner.nextLine() == "yes"
-
+            val response = onRequestSymbol(symbol)
             if (response) {
                 val facts = mutableSetOf(symbol)
                 facts += backward.resolved
