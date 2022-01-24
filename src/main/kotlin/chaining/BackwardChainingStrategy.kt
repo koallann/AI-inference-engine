@@ -25,17 +25,16 @@ class BackwardChainingStrategy(
         if (goal in visited) return false
         visited += goal
 
-        val premises = graph.vertices.filter { goal in it.value }.keys
-        if (premises.isEmpty()) {
+        val conjunctions = graph.conjunctions[goal]
+        if (conjunctions.isNullOrEmpty()) {
             val response = onRequestSymbol(this, goal)
             if (response) resolved += goal
             return response
         }
 
-        val premisesResolved = premises.filter { backward(it, visited, resolved) }
-
-        graph.conjunctions[goal]?.forEach { conjunction ->
-            if (premisesResolved.containsAll(conjunction)) {
+        conjunctions.forEach { conjunction ->
+            val conjunctionResolved = conjunction.all { backward(it, visited, resolved) }
+            if (conjunctionResolved) {
                 resolved += goal
                 return true
             }
