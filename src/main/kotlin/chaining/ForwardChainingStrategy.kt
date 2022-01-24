@@ -17,13 +17,14 @@ class ForwardChainingStrategy(
 
         while (!queue.isEmpty()) {
             val p = queue.pop()
-            if (p == goal) return true
 
             graph.vertices[p]?.forEach { consequent ->
                 graph.conjunctions[consequent]?.forEach { conjunction ->
                     if (resolved.containsAll(conjunction)) {
                         resolved += consequent
-                        queue.push(consequent)
+
+                        if (consequent == goal) return true
+                        else queue.push(consequent)
                     }
                 }
             }
