@@ -10,10 +10,7 @@ class BackwardChainingStrategy(
 
     val resolved: MutableSet<Symbol> = HashSet()
 
-    fun canReach(goal: Symbol): Boolean {
-        resolved.clear()
-        return backward(goal, HashSet(), resolved)
-    }
+    fun canReach(goal: Symbol): Boolean = backward(goal, HashSet(), resolved)
 
     private fun backward(
         goal: Symbol,

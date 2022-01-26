@@ -12,7 +12,6 @@ class ForwardChainingStrategy(
     val resolved: MutableSet<Symbol> = HashSet(facts)
 
     fun canReach(goal: Symbol): Boolean {
-        resolved.clear()
         val queue = LinkedList(facts)
 
         while (!queue.isEmpty()) {

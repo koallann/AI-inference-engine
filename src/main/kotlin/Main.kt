@@ -32,8 +32,11 @@ class Main {
 
             inputFile.bufferedReader().use { input ->
                 var line: String? = input.readLine()
-
-                while (line != null && line.matches(PATTERN_INPUT_LINE)) {
+                while (line != null) {
+                    if (!line.matches(PATTERN_INPUT_LINE)) {
+                        println("Invalid line: $line")
+                        exitProcess(1)
+                    }
                     val split = line.split("->")
                     val premises = split[0].split(",")
                     val conclusion = split[1]
